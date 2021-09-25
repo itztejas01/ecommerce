@@ -41,6 +41,7 @@ function ProductScreen({ match, history }) {
     
                                 <ListGroup.Item>
                                 <Rating value={product.rating} text={`${product.numReviews} reviews`} color={'#ffe135'} />
+                            
                                 </ListGroup.Item>
                                 
                                 <ListGroup.Item>

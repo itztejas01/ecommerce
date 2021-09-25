@@ -32,7 +32,7 @@ function LoginScreen({location,history}) {
     }
     return (
         <FormContainer> 
-            <h1>Login In</h1>
+            <h1>LogIn</h1>
             {error && <Message variant='danger'>{error}</Message>}
             {loading && <Loader />}
             <Form onSubmit={submitHandler}>
@@ -53,7 +53,6 @@ function LoginScreen({location,history}) {
                     <Form.Control
                         type='password'
                         placeholder="enter password"
-                        value={password}
                         onChange={(e) =>setPassword(e.target.value)}
                     >
 

@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
-import { Form,Button, Row, Col } from 'react-bootstrap'
+import { Form,Button, Row, Col, Table } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { getUserDetails,updateUserProfile } from '../actions/userAction'
 import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants'
+import { listMyOrder } from '../actions/orderAction'
 
 function ProfileScreen({history}) {
     const [first_name, setFirstName] = useState('') 
@@ -18,24 +20,25 @@ function ProfileScreen({history}) {
     const dispatch = useDispatch()
 
     const userDetails= useSelector(state => state.userDetails)
-
     const {error, loading, user } = userDetails
     
     const userLogin= useSelector(state => state.userLogin)
-
     const {userInfo} = userLogin
     
     const userUpdateProfile = useSelector(state => state.userUpdateProfile)
-
     const { success } = userUpdateProfile
+    
+    const orderListMy = useSelector(state => state.orderListMy)
+    const { loading:loadingOrder, error:errorOrders, orders } = orderListMy
 
     useEffect(()=>{
         if(!userInfo){
             history.push('/login')
         }else{
-            if(!user || !user.name || success){
+            if(!user || !user.name || success || userInfo._id !== user._id){
                 dispatch({type: USER_UPDATE_PROFILE_RESET})
                 dispatch(getUserDetails('profile'))
+                dispatch(listMyOrder())
             }else{
                 setFirstName(user.name.split(' ')[0])
                 setLastName(user.name.split(' ')[1])
@@ -145,6 +148,45 @@ function ProfileScreen({history}) {
 
             <Col md={9}>
                 <h2>My Orders</h2>
+                {loadingOrder ?(
+                    <Loader />
+                ):errorOrders ?(
+                    <Message variant='danger'>{errorOrders}</Message>
+                ):(
+                    <Table stripped responsive className='table-sm'>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Paid</th>
+                                <th>Delivered</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {orders.map(itemorder => (
+                                <tr key={itemorder._id}>
+                                    <td>{itemorder._id}</td>
+                                    <td> {itemorder.createdAt.substring(0,10)} </td>
+                                    <td> Rs. {itemorder.totalPrice}</td>
+                                    <td> {itemorder.isPaid ? itemorder.paidAt.substring(0,10) :(
+                                        <i className='fas fa-times' style={{color:'red'}}> Not Paid yet</i>
+                                    )} </td>
+                                    <td>
+                                        <LinkContainer to={`/order/${itemorder._id}`}>
+                                            <Button className='btn-xl my-1'>{itemorder.isPaid ? 'Details' : 'Payment page'}</Button>
+                                        </LinkContainer>
+                                    </td>
+
+                                </tr>
+                            ))}
+                        </tbody>
+
+
+                    </Table>
+                )}
             </Col>
         </Row>
     )

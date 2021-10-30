@@ -9,6 +9,7 @@ Django                        3.2.7
 django-cors-headers           3.8.0
 djangorestframework           3.12.4
 djangorestframework-simplejwt 4.8.0
+pillow
 
 After that install react
 

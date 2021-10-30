@@ -1,26 +1,58 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { productListReducers, productDetailsReducers } from './reducers/productReducers'
+import { productListReducers, 
+    productDetailsReducers,
+    productDeleteReducers,
+    productCreateReducers,
+    productUpdateReducers,
+    productReviewCreateReducers,
+    
+} from './reducers/productReducers'
+
 import { cartReducer } from './reducers/cartReducers'
-import { userLoginReducers,userDeleteReducers, userRegisterReducers, userDetailsReducers,userUpdateProfileReducers, userListReducers } from './reducers/userReducers'
-import { orderCreateReducer, orderDetailsReducer, orderPayReducer, orderListMyReducer } from './reducers/orderReducers'
+
+import { userLoginReducers,
+    userDeleteReducers, 
+    userRegisterReducers, 
+    userDetailsReducers,
+    userUpdateProfileReducers, 
+    userListReducers, 
+    userUpdateReducers } from './reducers/userReducers'
+
+import { orderCreateReducer, 
+    orderDetailsReducer, 
+    orderPayReducer, 
+    orderListMyReducer,
+    orderListReducer,
+    orderDeliverReducer,
+ } from './reducers/orderReducers'
 
 const reducer = combineReducers({
     productList : productListReducers,
-    productDetails:productDetailsReducers,
+    productDetails: productDetailsReducers,
+    productDelete: productDeleteReducers,
+    productCreate: productCreateReducers,
+    productUpdate: productUpdateReducers,
+    productReviewCreate: productReviewCreateReducers,
+    
     cart: cartReducer,
+    
+    
     userLogin: userLoginReducers,
     userRegister: userRegisterReducers,
     userDetails: userDetailsReducers,
     userUpdateProfile: userUpdateProfileReducers,
     userList: userListReducers,
     userDelete: userDeleteReducers,
+    userUpdate:userUpdateReducers,
 
     orderCreate: orderCreateReducer,
     orderDetails: orderDetailsReducer,
     orderPay: orderPayReducer,
     orderListMy: orderListMyReducer,
+    orderList: orderListReducer,
+    orderDeliver: orderDeliverReducer,
 
 })
 const cartItemsFromStorage = localStorage.getItem('cartItems') ?

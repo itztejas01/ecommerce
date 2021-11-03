@@ -154,7 +154,7 @@ function ProductScreen({ match, history }) {
                                 {loadingReview && <Loader />}
                                 {successReview && <Message variant='success'>Review Submitted</Message>}
                                 {errorReview && <Message variant='danger'>{errorReview}</Message>}
-                            {}
+                            
                                 {userInfo ?(
                                     <Form onSubmit={submitHandler}> 
                                         <Form.Group controlId='rating'>

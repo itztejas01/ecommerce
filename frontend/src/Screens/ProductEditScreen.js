@@ -69,7 +69,7 @@ function ProductEditScreen({match,history}) {
             countInStock,
             description
         }))
-        console.log("update product")
+        // console.log("update product")
         
     }
 

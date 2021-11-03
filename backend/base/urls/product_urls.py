@@ -11,6 +11,8 @@ urlpatterns = [
     
     path('<str:pk>/reviews/',views.createProductReview, name="product-review"),
     
+    path('top/',views.getTopProducts, name="top-products"),
+    
     path('<str:pk>/',views.getProduct, name="product"),
     
     

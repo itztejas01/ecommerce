@@ -4,14 +4,51 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from base.serializer import ProductSerializer
 from base.models import Product, Review
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rest_framework import status
 
 
 @api_view(['GET'])
 def getProducts(request):
-    products = Product.objects.all()
-    serializer = ProductSerializer(products, many=True)
+    query = request.query_params.get('keyword')
+    
+    if query == None:
+        query = ''
+
+    # print('query:',query)
+    products = Product.objects.filter(name__icontains=query).order_by('_id')
+    # products = Product.objects.all()
+    # print('products are found: ',products)
+    if products:
+        page = request.query_params.get('page')
+
+        paginator = Paginator(products,4)
+
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            products = paginator.page(1) 
+        except EmptyPage:
+            products = paginator.page(paginator.num_pages)
+
+        if page == None:
+            page = 1
+
+        page = int(page)
+        print('page are: ',page)
+        print('All pages are: ',paginator.num_pages)
+        serializer = ProductSerializer(products, many=True)
+        return Response({'products': serializer.data, 'page': page, 'pages': paginator.num_pages})
+    else:
+        return Response({'products_fail':'Product is not there in the list'},status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def getTopProducts(request):
+    product = Product.objects.filter(rating__gte=4).order_by('-rating')[0:5]
+    serializer = ProductSerializer(product, many=True)
     return Response(serializer.data)
+
+
 
 @api_view(['GET'])
 def getProduct(request, pk):
